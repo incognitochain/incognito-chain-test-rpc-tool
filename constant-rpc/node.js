@@ -46,3 +46,12 @@ ConstantNodeRPC.prototype.GetMempoolEntry = async function (params) {
     })
   })
 }
+// ESTIMATE FEE
+ConstantNodeRPC.prototype.EstimateFee = async function (params) {
+  return new Promise(resolve => {
+    this.client.request('estimatefee', params, function (err, response) {
+      if (err) throw err
+      resolve(response.Result)
+    })
+  })
+}
