@@ -4,17 +4,23 @@ class ConstantNodeRPC {
   constructor (host, port) {
     this.client = RPCClient(host, port)
   }
-  //virtual method 
-  //node
-  GetNetworkInfo(){}
-  GetConnectionCount(){}
-  GetAllPeers(){}
-  GetRawMempool(){}
-  GetMempoolEntry(){}
-  EstimateFee(){}
-  GetGenerate(){}
-  GetMiningInfo(){}
+  // virtual method
+  // node
+  GetNetworkInfo () {}
+  GetConnectionCount () {}
+  GetAllPeers () {}
+  GetRawMempool () {}
+  GetMempoolEntry () {}
+  EstimateFee () {}
+  GetGenerate () {}
+  GetMiningInfo () {}
 
+  // block
+  GetBlockChainInfo () {}
+  GetBlockHeader (getBy = '', block = '', shardID = 0) {}
+  GetBlockHash (shardID = 0, height = 0) {}
+  GetBlockCount (shardID = 0) {}
+  GetBlocks (numBlock = 0, shardID = '') {}
   //block
   //transaction
   /**
@@ -73,7 +79,7 @@ class ConstantNodeRPC {
 }
 
 // Implement virtual method
-function rpc(method, client, params){
+function rpc (method, client, params) {
   return new Promise(resolve => {
     client.request(method, params, function (err, response) {
       if (err) throw err
@@ -82,12 +88,11 @@ function rpc(method, client, params){
   })
 }
 
-for (let f of Object.getOwnPropertyNames( ConstantNodeRPC.prototype )) {
-  if (f == "constructor") continue
-  ConstantNodeRPC.prototype[f] = function(...params){
+for (let f of Object.getOwnPropertyNames(ConstantNodeRPC.prototype)) {
+  if (f == 'constructor') continue
+  ConstantNodeRPC.prototype[f] = function (...params) {
     return rpc(f.toLowerCase(), this.client, params)
   }
 }
 
 module.exports = ConstantNodeRPC
-
