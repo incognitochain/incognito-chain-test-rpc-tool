@@ -55,3 +55,12 @@ ConstantNodeRPC.prototype.EstimateFee = async function (params) {
     })
   })
 }
+// GET GENERATE
+ConstantNodeRPC.prototype.GetGenerate = async function (params) {
+  return new Promise(resolve => {
+    this.client.request('getgenerate', params, function (err, response) {
+      if (err) throw err
+      resolve(response.Result)
+    })
+  })
+}
