@@ -64,3 +64,12 @@ ConstantNodeRPC.prototype.GetGenerate = async function (params) {
     })
   })
 }
+// GET MINING INFO
+ConstantNodeRPC.prototype.GetMiningInfo = async function (params) {
+  return new Promise(resolve => {
+    this.client.request('getmininginfo', params, function (err, response) {
+      if (err) throw err
+      resolve(response.Result)
+    })
+  })
+}
