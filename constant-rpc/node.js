@@ -26,3 +26,13 @@ ConstantNodeRPC.prototype.GetAllPeers = async function (params) {
     })
   })
 }
+
+// GET RAW MEMPOOL
+ConstantNodeRPC.prototype.GetRawMempool = async function (params) {
+  return new Promise(resolve => {
+    this.client.request('getrawmempool', params, function (err, response) {
+      if (err) throw err
+      resolve(response.Result)
+    })
+  })
+}
