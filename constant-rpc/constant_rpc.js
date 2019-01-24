@@ -62,6 +62,13 @@ class ConstantNodeRPC {
    * eg: "916654c01e09828a3cbb17d8b58fb02ce975e84f7a2a8d207a343bba33589f56"
    */
   GetTransactionByHash(transactionHash=""){}
+
+  /**
+   * blockHash - string
+   * eg: "916654c01e09828a3cbb17d8b58fb02ce975e84f7a2a8d207a343bba33589f56"
+   * verbosity - string
+   */
+  RetrieveBlock(blockHash="", verbosity="1"){}
   
 }
 
