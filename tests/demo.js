@@ -1,6 +1,7 @@
 const ConstantRPC = require("../constant-rpc/constant")
 
 !async function(){
-    let res = await ConstantRPC.GetNetworkInfo()
+    const node1 = new ConstantRPC()
+    let res = await node1.GetNetworkInfo()
     console.log(res)
 }()

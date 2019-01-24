@@ -1,11 +1,19 @@
-module.exports = { GetNetworkInfo }
-const client = require('../common/rpcClient')
+const RPCClient = require('../common/rpcClient')
 
-async function GetNetworkInfo (params = []) {
-  return new Promise(resolve => {
-    client.request('getnetworkinfo', params, function (err, response) {
-      if (err) throw err
-      resolve(response.Result)
+class Client {
+  constructor (host, port) {
+    this.client = RPCClient(host, port)
+  }
+
+  async GetNetworkInfo (params = []) {
+    return new Promise(resolve => {
+      this.client.request('getnetworkinfo', params, function (err, response) {
+        if (err) throw err
+        resolve(response.Result)
+      })
     })
-  })
+  }
+  
 }
+
+module.exports = Client
