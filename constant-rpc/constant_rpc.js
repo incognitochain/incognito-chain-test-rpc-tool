@@ -1,10 +1,10 @@
 const RPCClient = require('../common/rpcClient')
 
-class Client {
+class ConstantNodeRPC {
   constructor (host, port) {
     this.client = RPCClient(host, port)
   }
 }
 
-module.exports = Client
+module.exports = ConstantNodeRPC
 require('./node')
