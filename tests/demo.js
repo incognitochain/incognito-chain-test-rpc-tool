@@ -7,5 +7,5 @@ const ConstantRPC = require('../constant-rpc/constant_rpc')
 //     '112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh'
 //   )
   console.log(res)
-  node1.ListOutputCoins
+  
 })()
