@@ -36,3 +36,13 @@ ConstantNodeRPC.prototype.GetRawMempool = async function (params) {
     })
   })
 }
+
+// GET MEMPOOL ENTRY
+ConstantNodeRPC.prototype.GetMempoolEntry = async function (params) {
+  return new Promise(resolve => {
+    this.client.request('getmempoolentry', params, function (err, response) {
+      if (err) throw err
+      resolve(response.Result)
+    })
+  })
+}
