@@ -76,6 +76,16 @@ class ConstantNodeRPC {
    */
   RetrieveBlock(blockHash="", verbosity="1"){}
   
+  /**
+   * 
+   * privateKey - string, eg : "112t8rqGc71CqjrDCuReGkphJ4uWHJmiaV7rVczqNhc33pzChmJRvikZNc3Dt5V7quhdzjWW9Z4BrB2BxdK5VtHzsG9JZdZ5M7yYYGidKKZV"
+   * paymentAddress - objects with paymentAddress as key, eg :{"1Uv2bWvMhSh3SVBsRvcjaoS17sCbQZRnTjP5cRMas94RNRdmUYXEJY1h93Vn4Z4ekSU3um57dLvpBSV7amFSs7NqqzUKuPqRYgjYbSmP8":1}
+   * fee - number
+   * hasPrivacy - number (only 0)
+   * stake Type - number
+   */
+  CreateAndSendStakingTransaction(privateKey="",paymentAddress=[],fee=0,hasPrivacy=0, stakeType=63){}
+  
 }
 
 // Implement virtual method
