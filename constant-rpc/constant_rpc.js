@@ -86,6 +86,16 @@ class ConstantNodeRPC {
    */
   CreateAndSendStakingTransaction(privateKey="",paymentAddress=[],fee=0,hasPrivacy=0, stakeType=63){}
   
+  /**
+   * 
+   */
+  GetBeaconBestState(){}
+
+  /**
+   * shardId - number
+   */
+  GetShardBestState(){}
+  
 }
 
 // Implement virtual method

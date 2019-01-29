@@ -43,6 +43,8 @@ async function TestTransferTransactionFlow(node={}) {
 //   let res = await node1.ListOutputCoins(
 //     '112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh'
 //   )
-  res = await TestTransferTransactionFlow(node1)
+  // res = await TestTransferTransactionFlow(node1)
+  // res = await node1.GetBeaconBestState()
+  res = await node1.GetShardBestState(1)
   console.log(res)
 })()
