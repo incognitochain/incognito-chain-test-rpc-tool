@@ -13,18 +13,29 @@ const paymenAddress3 = "1Uv2q736Pjyr3Y37uyHj3qZmHgnnHpcojpez5PE7cMwwBi4w1LpK3ZXd
 
 async function SendBalanceFlow(senderKey, receiverObjects = {}) {
     
-    const spentValue = 5;
     const node = new ConstantRPC();
     
     if (node == undefined || node == null) {
         return
     }
 
-    const balance_1_before = await node.GetBalanceByPrivatekey(privateKey1);
-    const balance_2_before = await node.GetBalanceByPrivatekey(privateKey2);
+    if (Object.keys(receiverObjects).length <= 0) {
+        return
+    }
+    let paymentList = {};
+    let balance_receivers_before = {};
+    let totalPay = 0
+    for (let k in receiverObjects) {
+        const {paymentAddress, value} = receiverObjects[k];
+        paymentList[paymentAddress] = value;
+        totalPay+=value;
+        balance_receivers_before[k] = await node.GetBalanceByPrivatekey(k); 
+    }
+    const balance_sender_before = await node.GetBalanceByPrivatekey(senderKey); 
 
     const blockCount1 = await node.GetBlockCount(0);
-    const sendTxResult = await node.CreateAndSendTransaction(privateKey1,{"1Uv3VL7CE2iE7AFjYmYFSTc3v5oYFwWuVtGtLUvAbxGgxsgVoQVNAX5jt8UA6k87gDP3YyQtLfhr95bBaDG7PRTsyHPk3jqs2bt9UanSV":spentValue},100,1) || {};
+    console.log("hahahahaha", paymentList)
+    const sendTxResult = await node.CreateAndSendTransaction(privateKey1,paymentList,100,1) || {};
 
     console.log("con co", sendTxResult);
     let {TxID=""} = sendTxResult;
@@ -65,18 +76,38 @@ async function SendBalanceFlow(senderKey, receiverObjects = {}) {
     } 
     console.log("generated block: ",generatedBlock)
 
-    const balance_1_after = await node.GetBalanceByPrivatekey(privateKey1);
-    const balance_2_after = await node.GetBalanceByPrivatekey(privateKey2);
+    const balance_sender_after = await node.GetBalanceByPrivatekey(senderKey);
+    let balance_receivers_after = {};
 
-    console.log("balance 1 before",balance_1_before)
-    console.log("balance 2 before",balance_2_before)
+    for (let k in receiverObjects) {
+        balance_receivers_after[k] = await node.GetBalanceByPrivatekey(k); 
+    }
 
-    console.log("after transfer ------------ :", spentValue)
+    console.log("balance sender before",balance_sender_before)
+    console.log("balance receivers before",balance_receivers_before)
 
-    console.log("balance 1 after",balance_1_after)
-    console.log("balance 2 after",balance_2_after)
+    console.log("after transfer ------------ :", totalPay)
+
+    console.log("balance sender after",balance_sender_after)
+    console.log("balance receivers after",balance_receivers_after)
     
-    if (balance_1_after === balance_1_before - spentValue && balance_2_after === balance_2_before+spentValue) {
+    let success = true;
+    if (balance_sender_before !== balance_sender_after + totalPay) {
+        success = false;
+    }
+
+    for (let k in receiverObjects) {
+        let {value} = receiverObjects[k];
+        let receiverBefore = balance_receivers_before[k]
+        let receiverAfter = balance_receivers_after[k]
+
+        if (receiverAfter != receiverBefore+value) {
+            success = false;
+        }
+    }
+    
+    
+    if (success) {
         console.log("FLOW SUCCESS!");
         return 1;
     }
@@ -88,6 +119,23 @@ async function SendBalanceFlow(senderKey, receiverObjects = {}) {
 
 
 !(async function () {
-    
-    await SendBalanceFlow();
+    // // CASE 1: SEND FROM 1 ACC TO 1  ACC
+    // let paymentList1 = {};
+    // paymentList1[privateKey2] = {
+    //     paymentAddress: paymenAddress2,
+    //     value: 5,
+    // }
+    // await SendBalanceFlow(privateKey1, paymentList1);
+
+    // CASE 2: SEND FROM 1 ACC TO 2  ACC
+    let paymentList2 = {};
+    paymentList2[privateKey2] = {
+        paymentAddress: paymenAddress2,
+        value: 10,
+    }
+    paymentList2[privateKey3] = {
+        paymentAddress: paymenAddress3,
+        value: 5,
+    }
+    await SendBalanceFlow(privateKey1, paymentList2);
 })()
