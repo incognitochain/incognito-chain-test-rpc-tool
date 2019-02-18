@@ -35,7 +35,7 @@ async function SendBalanceFlow(senderKey, receiverObjects = {}) {
 
     const blockCount1 = await node.GetBlockCount(0);
     // console.log("hahahahaha", paymentList)
-    const sendTxResult = await node.CreateAndSendTransaction(privateKey1,paymentList,100,1) || {};
+    const sendTxResult = await node.CreateAndSendTransaction(senderKey,paymentList,100,1) || {};
 
     console.log("con co", sendTxResult);
     let {TxID=""} = sendTxResult;
