@@ -146,5 +146,13 @@ async function SendBalanceFlow(senderKey, receiverObjects = {}) {
         value: 5,
     }
     await SendBalanceFlow(privateKey2, paymentList3);
+
+    console.log("START SEND FROM 1 TO 2 OUT OF MONEY")
+    let paymentList4 = {};
+    paymentList4[privateKey3] = {
+        paymentAddress: paymenAddress3,
+        value: 50,
+    }
+    await SendBalanceFlow(privateKey2, paymentList4);
     console.log("DONE")
 })()
