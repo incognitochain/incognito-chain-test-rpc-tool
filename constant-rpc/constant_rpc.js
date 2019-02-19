@@ -102,8 +102,11 @@ class ConstantNodeRPC {
 function rpc (method, client, params) {
   return new Promise(resolve => {
     client.request(method, params, function (err, response) {
-      if (err) throw err
-      resolve(response.Result)
+      res = {
+        Response: response,
+        Error: err
+      }
+      resolve(res)
     })
   })
 }

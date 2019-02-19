@@ -12,7 +12,7 @@ const privateKey3 = "112t8rnYBW9trs5rzxrMzLU5AnzngQhbp6X4c3xyamFkWU7PwWRq6gprDkm
 const paymenAddress3 = "1Uv2q736Pjyr3Y37uyHj3qZmHgnnHpcojpez5PE7cMwwBi4w1LpK3ZXdGpgvLgchMLkb3gkZmVyKfKmeMfhWkcHrtzTYcDHRsRLenyDmC";
 
 async function SendBalanceFlow(senderKey, receiverObjects = {}) {
-    // console.log("hahahahaha",senderKey, receiverObjects);
+    
     const node = new ConstantRPC();
     
     if (node == undefined || node == null) {
@@ -34,8 +34,8 @@ async function SendBalanceFlow(senderKey, receiverObjects = {}) {
     const balance_sender_before = await node.GetBalanceByPrivatekey(senderKey); 
 
     const blockCount1 = await node.GetBlockCount(0);
-    // console.log("hahahahaha", paymentList)
-    const sendTxResult = await node.CreateAndSendTransaction(senderKey,paymentList,100,1) || {};
+    console.log("hahahahaha", paymentList)
+    const sendTxResult = await node.CreateAndSendTransaction(privateKey1,paymentList,100,1) || {};
 
     console.log("con co", sendTxResult);
     let {TxID=""} = sendTxResult;
@@ -138,21 +138,4 @@ async function SendBalanceFlow(senderKey, receiverObjects = {}) {
         value: 5,
     }
     await SendBalanceFlow(privateKey1, paymentList2);
-    console.log("FINISH SEND TO 2 ACCOUNT")
-    console.log("START SEND FROM 1 TO 2")
-    let paymentList3 = {};
-    paymentList3[privateKey3] = {
-        paymentAddress: paymenAddress3,
-        value: 5,
-    }
-    await SendBalanceFlow(privateKey2, paymentList3);
-
-    console.log("START SEND FROM 1 TO 2 OUT OF MONEY")
-    let paymentList4 = {};
-    paymentList4[privateKey3] = {
-        paymentAddress: paymenAddress3,
-        value: 50,
-    }
-    await SendBalanceFlow(privateKey2, paymentList4);
-    console.log("DONE")
 })()
