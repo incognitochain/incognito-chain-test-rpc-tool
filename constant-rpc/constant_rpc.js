@@ -1,33 +1,33 @@
 const RPCClient = require('../common/rpcClient')
 
 class ConstantNodeRPC {
-  constructor (host, port) {
+  constructor(host, port) {
     this.client = RPCClient(host, port)
   }
   // virtual method
   // node
-  GetNetworkInfo () {}
-  GetConnectionCount () {}
-  GetAllPeers () {}
-  GetRawMempool () {}
-  GetMempoolEntry () {}
-  EstimateFee () {}
-  GetGenerate () {}
-  GetMiningInfo () {}
+  GetNetworkInfo() {}
+  GetConnectionCount() {}
+  GetAllPeers() {}
+  GetRawMempool() {}
+  GetMempoolEntry() {}
+  EstimateFee() {}
+  GetGenerate() {}
+  GetMiningInfo() {}
 
   // block
-  GetBlockChainInfo () {}
-  GetBlockHeader (getBy = '', block = '', shardID = 0) {}
-  GetBlockHash (shardID = 0, height = 0) {}
-  GetBlockCount (shardID = 0) {}
-  GetBlocks (numBlock = 0, shardID = '') {}
+  GetBlockChainInfo() {}
+  GetBlockHeader(getBy = '', block = '', shardID = 0) {}
+  GetBlockHash(shardID = 0, height = 0) {}
+  GetBlockCount(shardID = 0) {}
+  GetBlocks(numBlock = 0, shardID = '') {}
   //block
   //transaction
   /**
    *
    * privateKey - string
    */
-  ListOutputCoins(privateKey = ""){}
+  ListOutputCoins(privateKey = "") {}
 
   /**
    * min - number
@@ -45,14 +45,14 @@ class ConstantNodeRPC {
       ]
    */
 
-  ListUnspentOutputCoins(min=0, max=999999,privateKeys=[]){}
-  
+  ListUnspentOutputCoins(min = 0, max = 999999, privateKeys = []) {}
+
   /**
    * 
    * privateKey - string
    * example : "112t8rqGc71CqjrDCuReGkphJ4uWHJmiaV7rVczqNhc33pzChmJRvikZNc3Dt5V7quhdzjWW9Z4BrB2BxdK5VtHzsG9JZdZ5M7yYYGidKKZV"
    */
-  GetBalanceByPrivatekey(privateKey=""){}
+  GetBalanceByPrivatekey(privateKey = "") {}
 
   /**
    * 
@@ -61,21 +61,21 @@ class ConstantNodeRPC {
    * fee - number
    * hasPrivacy - number (only 0|1)
    */
-  CreateAndSendTransaction(privateKey="",paymentAddress=[],fee=0,hasPrivacy=1){}
-  
+  CreateAndSendTransaction(privateKey = "", paymentAddress = [], fee = 0, hasPrivacy = 1) {}
+
   /**
    * transactionHash - string
    * eg: "916654c01e09828a3cbb17d8b58fb02ce975e84f7a2a8d207a343bba33589f56"
    */
-  GetTransactionByHash(transactionHash=""){}
+  GetTransactionByHash(transactionHash = "") {}
 
   /**
    * blockHash - string
    * eg: "916654c01e09828a3cbb17d8b58fb02ce975e84f7a2a8d207a343bba33589f56"
    * verbosity - string
    */
-  RetrieveBlock(blockHash="", verbosity="1"){}
-  
+  RetrieveBlock(blockHash = "", verbosity = "1") {}
+
   /**
    * 
    * privateKey - string, eg : "112t8rqGc71CqjrDCuReGkphJ4uWHJmiaV7rVczqNhc33pzChmJRvikZNc3Dt5V7quhdzjWW9Z4BrB2BxdK5VtHzsG9JZdZ5M7yYYGidKKZV"
@@ -84,22 +84,27 @@ class ConstantNodeRPC {
    * hasPrivacy - number (only 0)
    * stake Type - number
    */
-  CreateAndSendStakingTransaction(privateKey="",paymentAddress=[],fee=0,hasPrivacy=0, stakeType=63){}
-  
+  CreateAndSendStakingTransaction(privateKey = "", paymentAddress = [], fee = 0, hasPrivacy = 0, stakeType = 63) {}
+
   /**
    * 
    */
-  GetBeaconBestState(){}
+  GetBeaconBestState() {}
 
   /**
    * shardId - number
    */
-  GetShardBestState(){}
+  GetShardBestState() {}
+
+  GetCandidateList() {}
+
+  GetCommitteeList(){}
   
+  CanPubkeyStake(){}
 }
 
 // Implement virtual method
-function rpc (method, client, params) {
+function rpc(method, client, params) {
   return new Promise(resolve => {
     client.request(method, params, function (err, response) {
       res = {

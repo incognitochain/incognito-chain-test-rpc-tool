@@ -3,7 +3,7 @@ const ConstantValue = require('../common/constant')
 const shard = new ConstantRPC("127.0.0.1", 9334);
 const beacon = new ConstantRPC("127.0.0.1", 9337);
 const assert = require('assert');
-mode = "BEACON"
+mode = "SHARD"
 describe("Staking Type", async function () {
     BurningAddress = ConstantValue.BurningPA
     shard1PA = ConstantValue.Shard1PA
@@ -117,7 +117,7 @@ if (mode == "BEACON") {
             }, 100, 0, 63)
             assert.notEqual(sendTxResult.Response.Error, null)
             stacktrace = sendTxResult.Response.Error.StackTrace
-            assert.equal((stacktrace.indexOf(ConstantValue.StakeBeaconAmountError) > -1), true, "Error Should Be: " + ConstantValue.StakeBeaconAmountError)
+            assert.equal((stacktrace.indexOf(ConstantValue.StakeShardAmountError) > -1), true, "Error Should Be: " + ConstantValue.StakeShardAmountError)
         })
 
         it("Should Fail when send transaction with privacy flag", async function () {
