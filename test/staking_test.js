@@ -26,14 +26,17 @@ describe("Staking Type", async function () {
 })
 //NEED COMMITEES/VALIDATOR/CANDIDATE check RPC function to complete testcase
 if (mode == "BEACON") {
-    describe("Stake Beacon Success", async function(){
+    describe("Stake Beacon Success", async function () {
         it("Should Allow valid address to stake with right information", async function () {
-            const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
-                "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 2
-            }, 100, 0, 64)
-            assert.equal(sendTxResult.Error,null,"Reponse Error should be null")
-            assert.equal(sendTxResult.Response.Error, null, "Content Error should be null")
-        })    
+            const canStake = await shard.CanPubkeyStake(ConstantValue.NodePB)
+            if (canStake.Response.Result.CanStake) {
+                const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
+                    "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 2
+                }, 100, 0, 64)
+                assert.equal(sendTxResult.Error, null, "Reponse Error should be null")
+                assert.equal(sendTxResult.Response.Error, null, "Content Error should be null")
+            }
+        })
     })
     describe("Staking Beacon Error", async function () {
         BurningAddress = ConstantValue.BurningPA
@@ -42,15 +45,17 @@ if (mode == "BEACON") {
         beacon1PA = ConstantValue.Beacon1PA
         beacon2PA = ConstantValue.Beacon2PA
         it("Should Fail when public key already in committee/validator/candidate list", async function () {
-            const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
-                "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 2
-            }, 100, 0, 64)
-            assert.notEqual(sendTxResult.Response.Error, null)
-            stacktrace = sendTxResult.Response.Error.StackTrace
-            result = stacktrace.indexOf(ConstantValue.StakerPBError) > -1
-            assert.equal(result, true, "Error should be: " + ConstantValue.StakerPBError)
+            const canStake = await shard.CanPubkeyStake(ConstantValue.NodePB)
+            if (!canStake.Response.Result.CanStake) {
+                const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
+                    "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 2
+                }, 100, 0, 64)
+                assert.notEqual(sendTxResult.Response.Error, null)
+                stacktrace = sendTxResult.Response.Error.StackTrace
+                result = stacktrace.indexOf(ConstantValue.StakerPBError) > -1
+                assert.equal(result, true, "Error should be: " + ConstantValue.StakerPBError)
+            }
         })
-
         it("Should Fail when send transaction not to burning address", async function () {
             const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
                 "1Uv3VB24eUszt5xqVfB87ninDu7H43gGxdjAUxs9j9JzisBJcJr7bAJpAhxBNvqe8KNjM5G9ieS1iC944YhPWKs3H2US2qSqTyyDNS4Ba": 2
@@ -77,14 +82,24 @@ if (mode == "BEACON") {
         })
     })
 } else {
-    describe("Stake Shard Success", async function(){
+    describe("Stake Shard Success", async function () {
         it("Should Allow valid address to stake with right information", async function () {
-            const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
-                "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 1
-            }, 100, 0, 63)
-            assert.equal(sendTxResult.Error,null,"Reponse Error should be null")
-            assert.equal(sendTxResult.Response.Error, null, "Content Error should be null")
-        })    
+            const canStake = await shard.CanPubkeyStake(ConstantValue.NodePB)
+            if (canStake.Response.Result.CanStake) {
+                const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
+                    "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 1
+                }, 100, 0, 63)
+                assert.equal(sendTxResult.Error, null, "Reponse Error should be null" + sendTxResult.Error)
+                if (sendTxResult.Response.Error != null) {
+                    stacktrace = sendTxResult.Response.Error.StackTrace
+                    result = stacktrace.indexOf(ConstantValue.DuplicateStakeError) > -1
+                    assert.equal(result, true, "Error should be: " + ConstantValue.DuplicateStakeError + " But Got " + stacktrace)
+                } else {
+                    assert.equal(sendTxResult.Response.Error, null, "Content Error should be null but got" + sendTxResult.Response.Error)
+                }
+                
+            }
+        })
     })
     describe("Staking Shard Error", async function () {
         BurningAddress = ConstantValue.BurningPA
@@ -93,13 +108,16 @@ if (mode == "BEACON") {
         beacon1PA = ConstantValue.Beacon1PA
         beacon2PA = ConstantValue.Beacon2PA
         it("Should Fail when public key already in committee/validator/candidate list", async function () {
-            const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
-                "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 1
-            }, 100, 0, 63)
-            assert.notEqual(sendTxResult.Response.Error, null)
-            stacktrace = sendTxResult.Response.Error.StackTrace
-            result = stacktrace.indexOf(ConstantValue.StakerPBError) > -1
-            assert.equal(result, true, "Error should be: " + ConstantValue.StakerPBError)
+            const canStake = await shard.CanPubkeyStake(ConstantValue.NodePB)
+            if (!canStake.Response.Result.CanStake) {
+                const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
+                    "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 1
+                }, 100, 0, 63)
+                assert.notEqual(sendTxResult.Response.Error, null)
+                stacktrace = sendTxResult.Response.Error.StackTrace
+                result = stacktrace.indexOf(ConstantValue.StakerPBError) > -1
+                assert.equal(result, true, "Error should be: " + ConstantValue.StakerPBError)
+            }
         })
 
         it("Should Fail when send transaction not to burning address", async function () {
@@ -108,7 +126,7 @@ if (mode == "BEACON") {
             }, 100, 0, 63)
             assert.notEqual(sendTxResult.Response.Error, null)
             stacktrace = sendTxResult.Response.Error.StackTrace
-            assert.equal((stacktrace.indexOf(ConstantValue.BurningPAError) > -1), true, "Error Should Be: " + ConstantValue.BurningPAError)
+            assert.equal((stacktrace.indexOf(ConstantValue.BurningPAError) > -1), true, "Error Should Be: " + ConstantValue.BurningPAError + " But Got " + stacktrace)
         })
 
         it("Should Fail when send transaction with wrong amount", async function () {

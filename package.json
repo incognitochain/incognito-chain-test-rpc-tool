@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "test-cross-shard": "mocha test/transaction_cross_test.js --timeout 60000",
+    "test-no-cross-shard": "mocha test/transaction_nocross_test.js --timeout 30000"
   },
   "author": "",
   "license": "ISC",
