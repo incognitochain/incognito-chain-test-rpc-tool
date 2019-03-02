@@ -1,7 +1,7 @@
 const ConstantRPC = require('../constant-rpc/constant_rpc')
 const shard = new ConstantRPC("127.0.0.1", 9334);
 !(async function () {
-    var txResult = await shard.GetTransactionByHash("cf995e0496bf882db82ce67334b3cc7877faf282f5662eabb4746afe46f24357")
+    var txResult = await shard.GetTransactionByHash("c8a30caa5e1911326c15093af05160a15c01f1c0441e2a78b40d5f5d62039293")
     console.log("Result Staking Transaction", txResult.Response.Result);
     // var txResult = await shard.GetTransactionByHash("1aa55ec28b2dfdc9c5312c73fd5a1c65a971b63178d937117e754ceae8b34d6b")
     // console.log("Result Staking Transaction", txResult.Response.Result);

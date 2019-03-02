@@ -27,9 +27,9 @@ describe("Test Normal Transaction", async function () {
                         resolve(tx.Response.Result)
                     } else {
                         setTimeout(() => {
-                            console.log('re-call after 5s')
+                            console.log('re-call after 10s')
                             getResult()
-                        }, 3000)
+                        }, 10000)
                     }
                 }
                 getResult()
@@ -70,9 +70,9 @@ describe("Test Normal Transaction", async function () {
                         resolve(tx.Response.Result)
                     } else {
                         setTimeout(() => {
-                            console.log('re-call after 3s')
+                            console.log('re-call after 10s')
                             getResult()
-                        }, 3000)
+                        }, 10000)
                     }
                 }
                 getResult()

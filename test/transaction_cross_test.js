@@ -4,7 +4,7 @@ const shard0 = new ConstantRPC("127.0.0.1", 9334);
 const shard1 = new ConstantRPC("127.0.0.1", 9338);
 const beacon = new ConstantRPC("127.0.0.1", 9337);
 const assert = require('assert');
-
+const waitblock = 5
 describe("Test Cross Shard Transaction", async function () {
     it("Should Be Able To Transfer Constant From SHARD 0 to SHARD 1", async function () {
         var txResult = await shard0.GetBalanceByPrivatekey("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh")
@@ -28,9 +28,9 @@ describe("Test Cross Shard Transaction", async function () {
                         resolve(tx.Response.Result)
                     } else {
                         setTimeout(() => {
-                            console.log('re-call after 3s')
+                            console.log('re-call after 10s')
                             getResult()
-                        }, 3000)
+                        }, 10000)
                     }
                 }
                 getResult()
@@ -45,13 +45,13 @@ describe("Test Cross Shard Transaction", async function () {
                 var getResult = async () => {
                     console.log('call result')
                     const blockResult = await shard1.GetBlockCount(1)
-                    if (blockResult.Response.Result != null && blockResult.Response.Result > currentBlockHeight + 3){
+                    if (blockResult.Response.Result != null && blockResult.Response.Result > currentBlockHeight + waitblock){
                         resolve(blockResult.Response.Result)
                     } else {
                         setTimeout(() => {
-                            console.log('re-call after 3s')
+                            console.log('re-call after 10s')
                             getResult()
-                        }, 3000)
+                        }, 10000)
                     }
                 }
                 getResult()
@@ -96,9 +96,9 @@ describe("Test Cross Shard Transaction", async function () {
                         resolve(tx.Response.Result)
                     } else {
                         setTimeout(() => {
-                            console.log('re-call after 3s')
+                            console.log('re-call after 10s')
                             getResult()
-                        }, 3000)
+                        }, 10000)
                     }
                 }
                 getResult()
@@ -113,7 +113,7 @@ describe("Test Cross Shard Transaction", async function () {
                 var getResult = async () => {
                     console.log('call result')
                     const blockResult = await shard0.GetBlockCount(0)
-                    if (blockResult.Response.Result != null && blockResult.Response.Result > currentBlockHeight + 3){
+                    if (blockResult.Response.Result != null && blockResult.Response.Result > currentBlockHeight + waitblock){
                         resolve(blockResult.Response.Result)
                     } else {
                         setTimeout(() => {

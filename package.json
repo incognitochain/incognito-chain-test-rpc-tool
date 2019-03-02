@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "test-cross-shard": "mocha test/transaction_cross_test.js --timeout 60000",
-    "test-no-cross-shard": "mocha test/transaction_nocross_test.js --timeout 30000"
+    "test-cross-shard": "mocha test/transaction_cross_test.js --timeout 600000",
+    "test-no-cross-shard": "mocha test/transaction_nocross_test.js --timeout 300000",
+    "test-stake": "mocha test/staking_test.js --timeout 5000"
   },
   "author": "",
   "license": "ISC",
