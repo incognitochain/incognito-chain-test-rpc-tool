@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "test-cross-shard": "mocha test/transaction_cross_test.js --timeout 600000",
-    "test-no-cross-shard": "mocha test/transaction_nocross_test.js --timeout 300000",
-    "test-stake": "mocha test/staking_test.js --timeout 5000"
+    "test-cross-constant": "mocha test/transaction_constant_cross_test.js --timeout 600000",
+    "test-no-cross-constant": "mocha test/transaction_constant_nocross_test.js --timeout 300000",
+    "test-stake": "mocha test/staking_test.js --timeout 5000",
+    "test-cross-cstoken": "mocha test/transaction_customToken_crossShard_test.js --timeout 600000",
+    "test-cross-both": "mocha test/transaction_both_cross_test.js --timeout 600000"
   },
   "author": "",
   "license": "ISC",

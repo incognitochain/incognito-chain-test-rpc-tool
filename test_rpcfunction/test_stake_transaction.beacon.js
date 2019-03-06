@@ -3,13 +3,6 @@ var assert = require('assert');
 const ConstantValue = require('../common/constant');
 !(async function () {
   const shard = new ConstantRPC("127.0.0.1", 9334);
-  // const shard2 = new ConstantRPC("127.0.0.1", 9336);
-  // const beacon = new ConstantRPC("127.0.0.1", 9337);
-
-  const blockCount1 = await shard.GetBlockCount(0);
-  if (shard == undefined || shard == null) {
-    return
-  }
   const canStake = await shard.CanPubkeyStake("18BRApfoGh91y3WdeK9BCW1utunNLVnRCAUFvsRpSWfmfoPzPqa")
   console.log("Result canStake", canStake.Response.Result);
   if (canStake.Response.Result.CanStake) {

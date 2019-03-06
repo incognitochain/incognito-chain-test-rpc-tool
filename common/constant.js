@@ -50,5 +50,9 @@ module.exports = {
     StakeBeaconAmountError: StakeBeaconAmountError,
     PrivacyError: PrivacyError,
     StakingTypeError: StakingTypeError,
-    DuplicateStakeError: DuplicateStakeError
+    DuplicateStakeError: DuplicateStakeError,
 };
+
+module.exports.GetRandomInt = (max) => {
+    return Math.floor(Math.random() * Math.floor(max));
+}
