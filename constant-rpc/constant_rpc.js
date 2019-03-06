@@ -86,6 +86,31 @@ class ConstantNodeRPC {
    */
   CreateAndSendStakingTransaction(privateKey = "", paymentAddress = [], fee = 0, hasPrivacy = 0, stakeType = 63) {}
 
+  /** 
+   "method": "createandsendcustomtokentransaction",
+    "params": [
+        * privateKey: "112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh",
+        * receivers: {},
+        * fee: -1,
+        * privacy: -1,
+        * token params: {
+            "TokenID": "",
+            "TokenName": "DEF", 
+            "TokenSymbol": "DEF",
+            "TokenTxType": 0,
+            "TokenAmount": 1000,
+            "TokenReceivers": {
+                "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1000
+            }
+        }
+      ]
+  */
+  CreateAndSendCustomTokenTransaction(privateKey = "", [], fee = 0, hasPrivacy = -1, tokenParms = []) {}
+
+  ListCustomToken() {}
+
+  ListUnspentCustomToken(paymentAddress = "", tokenID = "" ) {}
+
   /**
    * 
    */
@@ -98,9 +123,9 @@ class ConstantNodeRPC {
 
   GetCandidateList() {}
 
-  GetCommitteeList(){}
+  GetCommitteeList() {}
 
-  CanPubkeyStake(pubkey = ""){}
+  CanPubkeyStake(pubkey = "") {}
 }
 
 // Implement virtual method
