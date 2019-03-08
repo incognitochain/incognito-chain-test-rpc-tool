@@ -13,12 +13,12 @@ const ConstantValue = require('../common/constant');
     -1,
     {
         "TokenID": "",
-        "TokenName": "DEF1", 
-        "TokenSymbol": "def1",
+        "TokenName": "DEF1234", 
+        "TokenSymbol": "def1234",
         "TokenTxType": 0,
         "TokenAmount": 1000,
         "TokenReceivers": {
-            "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1000
+            "1Uv25dvj8HnfGNYAcY9c1wg5uJ2XoZe3MCUv3MBrbTS15tykLL1i3r1ko7VLv5zhB9acCs5JS7U4X9tKexbneumEje6o9rHZqVeihxZW7": 1000
         }
     }) 
     sendTxResults.push(sendTxResult.Response.Result)
