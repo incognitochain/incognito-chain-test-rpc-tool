@@ -42,6 +42,23 @@ describe("Test Cross Shard Transaction", async function () {
                 getResult()
             })
         }
+        const waitForResultTx2 = async () => {
+            return new Promise((resolve) => {
+                var getResult = async () => {
+                    console.log('call result')
+                    tx = await shard0.GetTransactionByHash(sendTxResult2.Response.Result.TxID)
+                    if (tx.Response.Result != null) {
+                        resolve(tx.Response.Result)
+                    } else {
+                        setTimeout(() => {
+                            console.log('re-call after 10s')
+                            getResult()
+                        }, 10000)
+                    }
+                }
+                getResult()
+            })
+        }
         //==================End UTILS
         var txResult = await shard0.GetBalanceByPrivatekey(ConstantValue.Shard0_1Prk)
         console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
@@ -49,12 +66,36 @@ describe("Test Cross Shard Transaction", async function () {
         var txResult = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
         console.log("SHARD 1: Account Balance Result", txResult.Response.Result);
         acc2Balance = txResult.Response.Result
+        //=====Create Custom Token=====
+        randomNumber = ConstantValue.GetRandomInt(10000000000)
+        console.log(randomNumber)
+        const name = "ABC" + randomNumber
+        const sendTxResult2 = await shard0.CreateAndSendCustomTokenTransaction(ConstantValue.Shard0_1Prk, 
+                {},
+                0,
+                -1,
+                {
+                    "TokenID": "",
+                    "TokenName": name, 
+                    "TokenSymbol": name,
+                    "TokenTxType": 0,
+                    "TokenAmount": 1000,
+                    "TokenReceivers": {
+                        //ConstantValue.Shard0_1PA
+                        "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1000
+                    }
+                })
+        assert.equal(sendTxResult2.Response.Error, null)
+        console.log("Transaction Shard 0", sendTxResult2.Response.Result)
+        const tokenID = sendTxResult2.Response.Result.TokenID
+        console.log(tokenID)
+        const resultTx2 = await waitForResultTx2()
+        console.log(resultTx2)
+        //=====End Create Custom Token=====
         const sendTxResult = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_1Prk, {
             "1Uv25dvj8HnfGNYAcY9c1wg5uJ2XoZe3MCUv3MBrbTS15tykLL1i3r1ko7VLv5zhB9acCs5JS7U4X9tKexbneumEje6o9rHZqVeihxZW7": 1000
         }, 0, 0)
         console.log("Transaction Shard 0 Constant", sendTxResult.Response.Result)
-        const tokenID = "eca7d87c681f81643d3291256600274c81ca32d519b8a0f87fbde81fd25fa650"
-        const name = "ABC1234"
         const sendTxResult1 = await shard0.CreateAndSendCustomTokenTransaction(ConstantValue.Shard0_1Prk, 
                 {},
                 0,
@@ -71,7 +112,7 @@ describe("Test Cross Shard Transaction", async function () {
                     }
                 })
         assert.equal(sendTxResult1.Response.Error, null)
-        console.log("Transaction Shard 0 Custom Token", sendTxResult.Response.Result)
+        console.log("Transaction Shard 0 Custom Token", sendTxResult1.Response.Result)
 
         const resultTx = await waitForResultTx()
         console.log(resultTx)
@@ -114,7 +155,6 @@ describe("Test Cross Shard Transaction", async function () {
         assert.equal(acc1BalanceNew, acc1Balance - 1000)
         assert.equal(acc2BalanceNew, acc2Balance + 1000)
 
-        // Check custom token value after cross shard
         const txResult1 = await shard1.ListUnspentCustomToken(ConstantValue.Shard1_0PA,tokenID)
         console.log("Account Balance Result - Shard1_0PA", txResult1.Response.Result);
         assert.equal(txResult1.Response.Result[0].Value, 500)

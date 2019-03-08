@@ -4,9 +4,9 @@ const Beacon1PB = "15NmWBEbc8faj4QxHjBh1ugpkuBC8qaoRAp2mktKiwcKiaQgV8i"
 const Beacon2Prk = "112t8rpdxySoXQJStHXoqTEnS9Mxtzibug2TE7dnrcLf4Xtt6MKNXrejqWrPFDvAKz7PigpanC4bh8Q86LgaRhvi6Q89qPSA2VHavT4kpsCq"
 const Beacon2PA = "1Uv2WcMMkZTrX6kDebYeL9mYCpxV79aG3wG3BTHKKztTZgpT7KDUcy7m6QfjUC9v6mZEjbLXF2VBKNfbdChFEkcrGAknaGF4bj41kGqiH"
 const Beacon2PB = "15cgoPsiZozeGZP2TgjrqgSihEsGBGvNqwvSFkAUQgzLJENhJrC"
-const Shard0_1Prk = "112t8rqGc71CqjrDCuReGkphJ4uWHJmiaV7rVczqNhc33pzChmJRvikZNc3Dt5V7quhdzjWW9Z4BrB2BxdK5VtHzsG9JZdZ5M7yYYGidKKZV"
-const Shard0_1PA = "1Uv3VB24eUszt5xqVfB87ninDu7H43gGxdjAUxs9j9JzisBJcJr7bAJpAhxBNvqe8KNjM5G9ieS1iC944YhPWKs3H2US2qSqTyyDNS4Ba"
-const shard0_1PB = "177KNe6pRhi97hD9LqjUvGxLoNeKh9F5oSeh99V6Td2sQcm7qEu"
+const Shard0_0Prk = "112t8rqGc71CqjrDCuReGkphJ4uWHJmiaV7rVczqNhc33pzChmJRvikZNc3Dt5V7quhdzjWW9Z4BrB2BxdK5VtHzsG9JZdZ5M7yYYGidKKZV"
+const Shard0_0PA = "1Uv3VB24eUszt5xqVfB87ninDu7H43gGxdjAUxs9j9JzisBJcJr7bAJpAhxBNvqe8KNjM5G9ieS1iC944YhPWKs3H2US2qSqTyyDNS4Ba"
+const shard0_0PB = "177KNe6pRhi97hD9LqjUvGxLoNeKh9F5oSeh99V6Td2sQcm7qEu"
 const Shard1_0Prk = "112t8roj4ZNc3mjUiAGoCwsrueBRiwYqE1URbUrJpBReRDZ5CDubBDUZtfN3Hxht3KtCFVNie1vsdWTPpTe3ydKHnnCvface41feiEahxJgd"
 const Shard1_0PA = "1Uv25dvj8HnfGNYAcY9c1wg5uJ2XoZe3MCUv3MBrbTS15tykLL1i3r1ko7VLv5zhB9acCs5JS7U4X9tKexbneumEje6o9rHZqVeihxZW7"
 const shard1_0PB = "14xSSFpFYxm26oq2z8uvcQHZWS8BbnjamoQWnX9Yb3MCDeHsroN"
@@ -31,9 +31,9 @@ module.exports = {
     Beacon2Prk: Beacon2Prk,
     Beacon2PA: Beacon2PA,
     Beacon2PB: Beacon2PB,
-    Shard0_0Prk: Shard0_1Prk,
-    Shard0_0PA: Shard0_1PA,
-    shard0_0PB: shard0_1PB,
+    Shard0_0Prk: Shard0_0Prk,
+    Shard0_0PA: Shard0_0PA,
+    shard0_0PB: shard0_0PB,
     Shard0_1Prk: NodePrk,
     Shard0_1PA: NodePA,
     shard0_1PB: NodePB,
