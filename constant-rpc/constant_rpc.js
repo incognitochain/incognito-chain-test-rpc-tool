@@ -111,6 +111,12 @@ class ConstantNodeRPC {
 
   ListUnspentCustomToken(paymentAddress = "", tokenID = "" ) {}
 
+  CreateAndSendPrivacyCustomTokenTransaction(privateKey = "", [], fee = 0, hasPrivacy = 1, tokenParms = []) {}
+
+  ListPrivacyCustomToken() {}
+
+  GetListPrivacyCustomTokenBalance(privateKey = "") {}
+  
   /**
    * 
    */
