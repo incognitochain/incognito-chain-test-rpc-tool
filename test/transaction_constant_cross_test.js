@@ -117,9 +117,9 @@ describe("Test Cross Shard Transaction", async function () {
                         resolve(blockResult.Response.Result)
                     } else {
                         setTimeout(() => {
-                            console.log('re-call after 3s')
+                            console.log('re-call after 10s')
                             getResult()
-                        }, 3000)
+                        }, 10000)
                     }
                 }
                 getResult()
@@ -250,9 +250,9 @@ describe("Test Cross Shard Transaction", async function () {
                         resolve(blockResult.Response.Result)
                     } else {
                         setTimeout(() => {
-                            console.log('re-call after 3s')
+                            console.log('re-call after 10s')
                             getResult()
-                        }, 3000)
+                        }, 10000)
                     }
                 }
                 getResult()
