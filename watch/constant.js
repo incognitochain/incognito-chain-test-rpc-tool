@@ -1,0 +1,1 @@
+module.exports.WaitTime = 3000

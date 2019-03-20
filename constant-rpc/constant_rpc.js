@@ -62,7 +62,7 @@ class ConstantNodeRPC {
    * hasPrivacy - number (only 0|1)
    */
   CreateAndSendTransaction(privateKey = "", paymentAddress = [], fee = 100, hasPrivacy = 0) {}
-
+  EstimateFee(privateKey = "", paymentAddress = [], fee = 0, hasPrivacy = 0) {}
   /**
    * transactionHash - string
    * eg: "916654c01e09828a3cbb17d8b58fb02ce975e84f7a2a8d207a343bba33589f56"
@@ -109,6 +109,8 @@ class ConstantNodeRPC {
 
   ListCustomToken() {}
 
+  GetListCustomTokenBalance(paymentAddress = "") {}
+
   ListUnspentCustomToken(paymentAddress = "", tokenID = "" ) {}
 
   CreateAndSendPrivacyCustomTokenTransaction(privateKey = "", [], fee = 0, hasPrivacy = 1, tokenParms = []) {}
@@ -125,7 +127,7 @@ class ConstantNodeRPC {
   /**
    * shardId - number
    */
-  GetShardBestState() {}
+  GetShardBestState(shardID=0) {}
 
   GetCandidateList() {}
 
