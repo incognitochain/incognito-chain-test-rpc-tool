@@ -1,5 +1,6 @@
 const ConstantRPC = require('../constant-rpc/constant_rpc')
 const ConstantValue = require('../common/constant')
+const Util = require('../helpers/utils')
 const shard0 = new ConstantRPC("127.0.0.1", 9334);
 const beacon = new ConstantRPC("127.0.0.1", 9337);
 const assert = require('assert');
@@ -23,24 +24,9 @@ describe("Test Normal Transaction", async function () {
             "1Uv2MXFL2PmuFa6zkF3sBh425jefEEm5Ed7ajgJVvrEZ2vpzUmUaKxgiuH7cugYbMexLtUcX3BQiXAB3L9ymU12rTj99EadXVxNc5yvHy": 1000
         }, fee, 0)
         console.log("Transaction Shard 0", sendTxResult.Response.Result.TxID)
-        const waitForResult = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    tx = await shard0.GetTransactionByHash(sendTxResult.Response.Result.TxID)
-                    if (tx.Response.Result != null) {
-                        resolve(tx.Response.Result.BlockHeight)
-                    } else {
-                        setTimeout(() => {
-                            getResult()
-                        }, waitTime)
-                    }
-                }
-                getResult()
-            })
-        }
+        
+        await Util.WaitForResultTx(shard0, waitTime, sendTxResult.Response.Result.TxID)
 
-        const result = await waitForResult()
-        console.log(result)
         var txResult = await shard0.GetBalanceByPrivatekey("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh")
         console.log("Account Balance Result", txResult.Response.Result);
         acc1BalanceNew = txResult.Response.Result
@@ -66,24 +52,9 @@ describe("Test Normal Transaction", async function () {
             "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 500
         }, fee, 0)
         console.log("Transaction Shard 0", sendTxResult.Response.Result.TxID)
-        const waitForResult = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    tx = await shard0.GetTransactionByHash(sendTxResult.Response.Result.TxID)
-                    if (tx.Response.Result != null) {
-                        resolve(tx.Response.Result.BlockHeight)
-                    } else {
-                        setTimeout(() => {
-                            getResult()
-                        }, waitTime)
-                    }
-                }
-                getResult()
-            })
-        }
 
-        const result = await waitForResult()
-        console.log(result)
+        await Util.WaitForResultTx(shard0, waitTime, sendTxResult.Response.Result.TxID)
+
         var txResult = await shard0.GetBalanceByPrivatekey("112t8rxTdWfGCtgWvAMHnnEw9vN3R1D7YgD1SSHjAnVGL82HCrMq9yyXrHv3kB4gr84cejnMZRQ973RyHhq2G3MksoTWejNKdSWoQYDFf4gQ")
         console.log("Account Balance Result", txResult.Response.Result);
         acc1BalanceNew = txResult.Response.Result
@@ -109,24 +80,9 @@ describe("Test Normal Transaction", async function () {
             "1Uv2MXFL2PmuFa6zkF3sBh425jefEEm5Ed7ajgJVvrEZ2vpzUmUaKxgiuH7cugYbMexLtUcX3BQiXAB3L9ymU12rTj99EadXVxNc5yvHy": 1000
         }, fee, 1)
         console.log("Transaction Shard 0", sendTxResult.Response.Result.TxID)
-        const waitForResult = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    tx = await shard0.GetTransactionByHash(sendTxResult.Response.Result.TxID)
-                    if (tx.Response.Result != null) {
-                        resolve(tx.Response.Result.BlockHeight)
-                    } else {
-                        setTimeout(() => {
-                            getResult()
-                        }, waitTime)
-                    }
-                }
-                getResult()
-            })
-        }
 
-        const result = await waitForResult()
-        console.log(result)
+        await Util.WaitForResultTx(shard0, waitTime, sendTxResult.Response.Result.TxID)
+
         var txResult = await shard0.GetBalanceByPrivatekey("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh")
         console.log("Account Balance Result", txResult.Response.Result);
         acc1BalanceNew = txResult.Response.Result
@@ -153,24 +109,9 @@ describe("Test Normal Transaction", async function () {
             "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 500
         }, fee, 1)
         console.log("Transaction Shard 0", sendTxResult.Response.Result.TxID)
-        const waitForResult = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    tx = await shard0.GetTransactionByHash(sendTxResult.Response.Result.TxID)
-                    if (tx.Response.Result != null) {
-                        resolve(tx.Response.Result.BlockHeight)
-                    } else {
-                        setTimeout(() => {
-                            getResult()
-                        }, waitTime)
-                    }
-                }
-                getResult()
-            })
-        }
 
-        const result = await waitForResult()
-        console.log(result)
+        await Util.WaitForResultTx(shard0, waitTime, sendTxResult.Response.Result.TxID)
+
         var txResult = await shard0.GetBalanceByPrivatekey("112t8rxTdWfGCtgWvAMHnnEw9vN3R1D7YgD1SSHjAnVGL82HCrMq9yyXrHv3kB4gr84cejnMZRQ973RyHhq2G3MksoTWejNKdSWoQYDFf4gQ")
         console.log("Account Balance Result", txResult.Response.Result);
         acc1BalanceNew = txResult.Response.Result

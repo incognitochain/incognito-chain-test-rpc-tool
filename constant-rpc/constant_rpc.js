@@ -134,12 +134,17 @@ class ConstantNodeRPC {
   GetCommitteeList() {}
 
   CanPubkeyStake(pubkey = "") {}
+
+  GetCrossShardBlock(shardID=0, blockHeight=0){}
 }
 
 // Implement virtual method
 function rpc(method, client, params) {
-  return new Promise(resolve => {
+  return new Promise((resolve,reject) => {
     client.request(method, params, function (err, response) {
+      if (err != null) {
+        reject(err)
+      }
       res = {
         Response: response,
         Error: err

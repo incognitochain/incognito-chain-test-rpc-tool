@@ -1,4 +1,5 @@
 const ConstantRPC = require('../constant-rpc/constant_rpc')
+const Util = require('../helpers/utils')
 const ConstantValue = require('../common/constant')
 const shard0 = new ConstantRPC("127.0.0.1", 9334);
 const shard1 = new ConstantRPC("127.0.0.1", 9338);
@@ -18,7 +19,7 @@ describe("Test Cross Shard Transaction", async function () {
         randomNumber = ConstantValue.GetRandomInt(100000)
         console.log(randomNumber)
         name = "ABC" + randomNumber
-        const sendTxResult1 = await shard0.CreateAndSendCustomTokenTransaction(ConstantValue.Shard0_1Prk, 
+        let sendTxResult1 = await shard0.CreateAndSendCustomTokenTransaction(ConstantValue.Shard0_1Prk, 
                 {},
                 fee,
                 0,
@@ -35,46 +36,13 @@ describe("Test Cross Shard Transaction", async function () {
                 })
         assert.equal(sendTxResult1.Response.Error, null)
         console.log("Transaction Shard 0", sendTxResult1.Response.Result.TokenID)
-        const tokenID = sendTxResult1.Response.Result.TokenID
-        const waitForResultTx1 = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    tx = await shard0.GetTransactionByHash(sendTxResult1.Response.Result.TxID)
-                    if (tx.Response.Result != null) {
-                        resolve(tx.Response.Result.BlockHeight)
-                    } else {
-                        setTimeout(() => {
-                            getResult()
-                        }, waitTime)
-                    }
-                }
-                getResult()
-            })
-        }
+        let tokenID = sendTxResult1.Response.Result.TokenID
 
-        const resultTx1 = await waitForResultTx1()
-        console.log(resultTx1)
+        let blockResultShard1 = await shard1.GetBlockCount(1)
+        let currentBlockHeightShard1 = blockResultShard1.Response.Result
 
-        const blockResult1 = await shard1.GetBlockCount(1)
-        const currentBlockHeight1 = blockResult1.Response.Result
-        const waitForResultBlock1 = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    const blockResult1 = await shard1.GetBlockCount(1)
-                    if (blockResult1.Response.Result != null && blockResult1.Response.Result > currentBlockHeight1 + waitblock){
-                        resolve(blockResult1.Response.Result)
-                    } else {
-                        setTimeout(() => {
-                            getResult()
-                        }, waitTime)
-                    }
-                }
-                getResult()
-            })
-        }
-
-        const resultBlock1 = await waitForResultBlock1()
-        console.log(resultBlock1)
+        await Util.WaitForResultTx(shard0, waitTime, sendTxResult1.Response.Result.TxID)
+        await Util.WaitForCrossShardBlockTransferCSToken(shard1,waitTime,1,currentBlockHeightShard1,tokenID, ConstantValue.Shard1_0PA, totalTokenAmount)
 
         var balanceResult = await shard1.GetListCustomTokenBalance(ConstantValue.Shard1_0PA)
         console.log("Account Balance Result 1 - Shard1_1PA", balanceResult.Response.Result.ListCustomTokenBalance.filter(x => x.TokenID === tokenID)[0].TokenID);
@@ -89,7 +57,7 @@ describe("Test Cross Shard Transaction", async function () {
         var txResult2 = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
         console.log("Account Balance Result 0", txResult2.Response.Result);
         acc2Balance = txResult2.Response.Result
-        const sendTxResult = await shard1.CreateAndSendCustomTokenTransaction(ConstantValue.Shard1_0Prk, 
+        let sendTxResult = await shard1.CreateAndSendCustomTokenTransaction(ConstantValue.Shard1_0Prk, 
                 {},
                 fee,
                 0,
@@ -107,53 +75,16 @@ describe("Test Cross Shard Transaction", async function () {
         assert.equal(sendTxResult.Response.Error, null)
         console.log("Transaction Shard 1", sendTxResult.Response.Result.TokenID)
 
-        const waitForResultTx2 = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    tx = await shard1.GetTransactionByHash(sendTxResult.Response.Result.TxID)
-                    if (tx.Response.Result != null) {
-                        resolve(tx.Response.Result.BlockHeight)
-                    } else {
-                        setTimeout(() => {
-                            getResult()
-                        }, waitTime)
-                    }
-                }
-                getResult()
-            })
-        }
+        let blockResultShard0 = await shard0.GetBlockCount(0)
+        let currentBlockHeightShard0 = blockResultShard0.Response.Result
+        await Util.WaitForResultTx(shard1, waitTime, sendTxResult.Response.Result.TxID)
+        await Util.WaitForCrossShardBlockTransferCSToken(shard0, waitTime, 0,currentBlockHeightShard0, tokenID, ConstantValue.Shard0_1PA, 500)
 
-        const resultTx2 = await waitForResultTx2()
-        console.log(resultTx2)
-
-
-        const blockResult2 = await shard0.GetBlockCount(0)
-        const currentBlockHeight2 = blockResult2.Response.Result
-        const waitForResultBlock2 = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    const blockResult2 = await shard0.GetBlockCount(0)
-                    if (blockResult2.Response.Result != null && blockResult2.Response.Result > currentBlockHeight2 + waitblock){
-                        resolve(blockResult2.Response.Result)
-                    } else {
-                        setTimeout(() => {
-                            getResult()
-                        }, waitTime)
-                    }
-                }
-                getResult()
-            })
-        }
-
-        const resultBlock2 = await waitForResultBlock2()
-        console.log(resultBlock2)
-
-
-        const balanceResult1 = await shard1.GetListCustomTokenBalance(ConstantValue.Shard1_0PA)
+        let balanceResult1 = await shard1.GetListCustomTokenBalance(ConstantValue.Shard1_0PA)
         console.log("Account Balance Result 1 - Shard1_1PA", balanceResult1.Response.Result.ListCustomTokenBalance.filter(x => x.TokenID === tokenID)[0].TokenID);
         assert.equal(balanceResult1.Response.Result.ListCustomTokenBalance.filter(x => x.TokenID === tokenID)[0].Amount, totalTokenAmount - 500)
 
-        const balanceResult2 = await shard0.GetListCustomTokenBalance(ConstantValue.Shard0_1PA)
+        let balanceResult2 = await shard0.GetListCustomTokenBalance(ConstantValue.Shard0_1PA)
         console.log("Account Balance Result 1 - Shard1_1PA", balanceResult2.Response.Result.ListCustomTokenBalance.filter(x => x.TokenID === tokenID)[0].TokenID);
         assert.equal(balanceResult2.Response.Result.ListCustomTokenBalance.filter(x => x.TokenID === tokenID)[0].Amount, 500)
 
@@ -166,7 +97,7 @@ describe("Test Cross Shard Transaction", async function () {
     //     randomNumber = ConstantValue.GetRandomInt(100000)
     //     console.log(randomNumber)
     //     name = "ABC" + randomNumber
-    //     const sendTxResult1 = await shard0.CreateAndSendCustomTokenTransaction(ConstantValue.Shard0_1Prk, 
+    //     let sendTxResult1 = await shard0.CreateAndSendCustomTokenTransaction(ConstantValue.Shard0_1Prk, 
     //             {},
     //             0,
     //             -1,
@@ -183,8 +114,8 @@ describe("Test Cross Shard Transaction", async function () {
     //             })
     //     assert.equal(sendTxResult1.Response.Error, null)
     //     console.log("Transaction Shard 0", sendTxResult1.Response.Result)
-    //     const tokenID = sendTxResult1.Response.Result.TokenID
-    //     const waitForResultTx1 = async () => {
+    //     let tokenID = sendTxResult1.Response.Result.TokenID
+    //     let waitForResultTx1 = async () => {
     //         return new Promise((resolve) => {
     //             var getResult = async () => {
     //                 console.log('call result')
@@ -202,14 +133,14 @@ describe("Test Cross Shard Transaction", async function () {
     //         })
     //     }
 
-    //     const resultTx1 = await waitForResultTx1()
+    //     let resultTx1 = await waitForResultTx1()
     //     console.log(resultTx1)
 
-    //     const txResult = await shard0.ListUnspentCustomToken(ConstantValue.Shard0_1PA,tokenID)
+    //     let txResult = await shard0.ListUnspentCustomToken(ConstantValue.Shard0_1PA,tokenID)
     //     console.log("Account Balance Result 1 - Shard1_1PA", txResult.Response.Result);
     //     assert.equal(txResult.Response.Result[0].Value, 1000)
 
-    //     const sendTxResult = await shard0.CreateAndSendCustomTokenTransaction(ConstantValue.Shard0_1Prk, 
+    //     let sendTxResult = await shard0.CreateAndSendCustomTokenTransaction(ConstantValue.Shard0_1Prk, 
     //             {},
     //             0,
     //             -1,
@@ -227,7 +158,7 @@ describe("Test Cross Shard Transaction", async function () {
     //     assert.equal(sendTxResult.Response.Error, null)
     //     console.log("Transaction Shard 0", sendTxResult.Response.Result)
 
-    //     const waitForResultTx2 = async () => {
+    //     let waitForResultTx2 = async () => {
     //         return new Promise((resolve) => {
     //             var getResult = async () => {
     //                 console.log('call result')
@@ -245,17 +176,17 @@ describe("Test Cross Shard Transaction", async function () {
     //         })
     //     }
 
-    //     const resultTx2 = await waitForResultTx2()
+    //     let resultTx2 = await waitForResultTx2()
     //     console.log(resultTx2)
 
 
-    //     const blockResult1 = await shard1.GetBlockCount(1)
-    //     const currentBlockHeight1 = blockResult1.Response.Result
-    //     const waitForResultBlock1 = async () => {
+    //     let blockResult1 = await shard1.GetBlockCount(1)
+    //     let currentBlockHeight1 = blockResult1.Response.Result
+    //     let waitForResultBlock1 = async () => {
     //         return new Promise((resolve) => {
     //             var getResult = async () => {
     //                 console.log('call result')
-    //                 const blockResult1 = await shard1.GetBlockCount(1)
+    //                 let blockResult1 = await shard1.GetBlockCount(1)
     //                 if (blockResult1.Response.Result != null && blockResult1.Response.Result > currentBlockHeight1 + waitblock){
     //                     resolve(blockResult1.Response.Result)
     //                 } else {
@@ -269,15 +200,15 @@ describe("Test Cross Shard Transaction", async function () {
     //         })
     //     }
 
-    //     const resultBlock1 = await waitForResultBlock1()
+    //     let resultBlock1 = await waitForResultBlock1()
     //     console.log(resultBlock1)
 
 
-    //     const txResult1 = await shard1.ListUnspentCustomToken(ConstantValue.Shard1_0PA,tokenID)
+    //     let txResult1 = await shard1.ListUnspentCustomToken(ConstantValue.Shard1_0PA,tokenID)
     //     console.log("Account Balance Result - Shard1_0PA", txResult1.Response.Result);
     //     assert.equal(txResult1.Response.Result[0].Value, 200)
 
-    //     const txResult2 = await shard0.ListUnspentCustomToken(ConstantValue.Shard0_1PA,tokenID)
+    //     let txResult2 = await shard0.ListUnspentCustomToken(ConstantValue.Shard0_1PA,tokenID)
     //     console.log("Account Balance Result - Shard0_1PA", txResult2.Response.Result);
     //     assert.equal(txResult2.Response.Result[0].Value, 800)
     // })
