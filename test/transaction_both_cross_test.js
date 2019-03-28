@@ -1,7 +1,7 @@
 const ConstantRPC = require('../constant-rpc/constant_rpc')
 const ConstantValue = require('../common/constant')
 const shard0 = new ConstantRPC("127.0.0.1", 9334);
-const shard1 = new ConstantRPC("127.0.0.1", 9338);
+const shard1 = new ConstantRPC("127.0.0.1", 9337);
 const beacon = new ConstantRPC("127.0.0.1", 9337);
 const assert = require('assert');
 const waitblock = 5

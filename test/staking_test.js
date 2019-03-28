@@ -10,19 +10,19 @@ describe("Staking Type", async function () {
     nodePA = ConstantValue.nodePA
     beacon1PA = ConstantValue.Beacon1PA
     beacon2PA = ConstantValue.Beacon2PA
-    it("Should Fail to get reponse with invalid MetadataType", async function () {
-        const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
-            "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 2
-        }, 100, 0, 62)
-        assert.notEqual(sendTxResult.Error, null, "Error Should Be: No Response From Node")
-    })
+    // it("Should Fail to get reponse with invalid MetadataType", async function () {
+    //     const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
+    //         "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 2
+    //     }, 100, 0, 62)
+    //     assert.notEqual(sendTxResult.Error, null, "Error Should Be: No Response From Node")
+    // })
 
-    it("Should Fail to get reponse with invalid MetadataType", async function () {
-        const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
-            "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 2
-        }, 100, 0, 65)
-        assert.notEqual(sendTxResult.Error, null, "Error Should Be: No Response From Node")
-    })
+    // it("Should Fail to get reponse with invalid MetadataType", async function () {
+    //     const sendTxResult = await shard.CreateAndSendStakingTransaction(ConstantValue.NodePrk, {
+    //         "1NHp16Y29xjc1PoXb1qwr65BfVVoHZuCbtTkVyucRzbeydgQHs2wPu5PC1hD": 2
+    //     }, 100, 0, 65)
+    //     assert.notEqual(sendTxResult.Error, null, "Error Should Be: No Response From Node")
+    // })
 })
 //NEED COMMITEES/VALIDATOR/CANDIDATE check RPC function to complete testcase
 if (mode == "BEACON") {

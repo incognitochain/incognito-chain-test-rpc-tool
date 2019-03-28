@@ -9,37 +9,38 @@ const ConstantValue = require('../common/constant');
   block1 = await shard1.GetBlockCount(1)
   index = 0
   index1 = 0
-  for (i = 0; i < 50; i++) {
+  fee = 1
+  for (i = 0; i < 1; i++) {
     const sendTxResult00 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     const sendTxResult01 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     const sendTxResult02 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     const sendTxResult03 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     const sendTxResult04 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     const sendTxResult05 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     const sendTxResult06 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     const sendTxResult07 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     const sendTxResult08 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     const sendTxResult09 = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_0Prk, {
       "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 1,
-    }, 0, 0)
+    }, fee, 0)
     if (sendTxResult00.Response.Result.TxID !== 'undefined' && sendTxResult01.Response.Result.TxID !== 'undefined' && sendTxResult02.Response.Result.TxID !== 'undefined' && sendTxResult03.Response.Result.TxID !== 'undefined' && sendTxResult04.Response.Result.TxID !== 'undefined' && sendTxResult05.Response.Result.TxID !== 'undefined' && sendTxResult06.Response.Result.TxID !== 'undefined' && sendTxResult07.Response.Result.TxID !== 'undefined' && sendTxResult08.Response.Result.TxID !== 'undefined' && sendTxResult09.Response.Result.TxID !== 'undefined'){
       index++
     }

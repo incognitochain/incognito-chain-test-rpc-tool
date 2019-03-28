@@ -2,7 +2,7 @@ const ConstantRPC = require('../constant-rpc/constant_rpc')
 const ConstantValue = require('../common/constant')
 const Util = require('../helpers/utils')
 const shard0 = new ConstantRPC("127.0.0.1", 9334);
-const shard1 = new ConstantRPC("127.0.0.1", 9338);
+const shard1 = new ConstantRPC("127.0.0.1", 9337);
 const beacon = new ConstantRPC("127.0.0.1", 9337);
 const assert = require('assert');
 const waitblock = 10
@@ -59,7 +59,6 @@ describe("Test Cross Shard Transaction", async function () {
             "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": transferAmount2
         }, fee, 0)
         console.log("Transaction Shard 1", sendTxResult.Response.Result.TxID)
-
         const blockResultShard0 = await shard0.GetBlockCount(0)
         const currentBlockHeightShard0 = blockResultShard0.Response.Result
         
