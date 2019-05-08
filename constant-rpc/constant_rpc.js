@@ -54,6 +54,8 @@ class ConstantNodeRPC {
    */
   GetBalanceByPrivatekey(privateKey = "") {}
 
+  GetCurrentStabilityInfo() {}
+  
   /**
    * 
    * privateKey - string, eg : "112t8rqGc71CqjrDCuReGkphJ4uWHJmiaV7rVczqNhc33pzChmJRvikZNc3Dt5V7quhdzjWW9Z4BrB2BxdK5VtHzsG9JZdZ5M7yYYGidKKZV"
@@ -126,17 +128,20 @@ class ConstantNodeRPC {
   GetCommitteeList() {}
 
   CanPubkeyStake(pubkey = "") {}
+
+  GetMempoolInfo(){}
 }
 
 // Implement virtual method
 function rpc(method, client, params) {
-  return new Promise(resolve => {
+  return new Promise((resolve,reject) => {
     client.request(method, params, function (err, response) {
-      res = {
-        Response: response,
-        Error: err
+      if (err || response.Error) {
+        console.log("Error:", method, params, err || response.Error)
+        reject(new Error("Request fail"))
+        return
       }
-      resolve(res)
+      resolve(response.Result)
     })
   })
 }

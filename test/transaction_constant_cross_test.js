@@ -1,11 +1,13 @@
 const ConstantRPC = require('../constant-rpc/constant_rpc')
 const ConstantValue = require('../common/constant')
-const shard0 = new ConstantRPC("127.0.0.1", 9334);
-const shard1 = new ConstantRPC("127.0.0.1", 9338);
-const beacon = new ConstantRPC("127.0.0.1", 9337);
+const shard0 = new ConstantRPC("178.128.233.64", 9334);
+const shard1 = new ConstantRPC("142.93.82.199", 9334);
+const beacon = new ConstantRPC("127.0.0.1", 9334);
 const assert = require('assert');
 const waitblock = 5
 describe("Test Cross Shard Transaction", async function () {
+    this.timeout(60000);
+
     it("Should Be Able To Transfer Constant From SHARD 0 to SHARD 1", async function () {
         var txResult = await shard0.GetBalanceByPrivatekey("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh")
         console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
