@@ -7,14 +7,21 @@
     "test": "mocha",
     "test-cross-constant": "mocha test/transaction_constant_cross_test.js --timeout 600000",
     "test-no-cross-constant": "mocha test/transaction_constant_nocross_test.js --timeout 300000",
-    "test-stake": "mocha test/staking_test.js --timeout 5000",
-    "test-cross-cstoken": "mocha test/transaction_customToken_crossShard_test.js --timeout 600000",
-    "test-cross-both": "mocha test/transaction_both_cross_test.js --timeout 600000"
+    "test-stake": "mocha test/staking_test.js --timeout 50000",
+    "test-cross-cstoken": "mocha test/transaction_cstoken_cross_test.js --timeout 600000",
+    "test-cross-both": "mocha test/transaction_both_cross_test.js --timeout 600000",
+    "test-cross-cstoken-privacy": "mocha test/transaction_cstoken_privacy_cross_test.js --timeout 600000"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "jayson": "^2.1.1",
     "mocha": "^6.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
+    "babel-preset-es2015": "^6.24.1",
+    "webpack": "^4.29.6"
   }
 }

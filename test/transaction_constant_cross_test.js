@@ -1,144 +1,150 @@
 const ConstantRPC = require('../constant-rpc/constant_rpc')
 const ConstantValue = require('../common/constant')
-const shard0 = new ConstantRPC("178.128.233.64", 9334);
-const shard1 = new ConstantRPC("142.93.82.199", 9334);
-const beacon = new ConstantRPC("127.0.0.1", 9334);
+const Util = require('../helpers/utils')
+const shard0 = new ConstantRPC("127.0.0.1", 9334);
+const shard1 = new ConstantRPC("127.0.0.1", 9337);
+const beacon = new ConstantRPC("127.0.0.1", 9337);
 const assert = require('assert');
-const waitblock = 5
+const waitblock = 10
+const fee = 10
+const waitTime = 3000
+const transferAmount = 1000
+const transferAmount2 = 500
 describe("Test Cross Shard Transaction", async function () {
     this.timeout(60000);
 
     it("Should Be Able To Transfer Constant From SHARD 0 to SHARD 1", async function () {
-        var txResult = await shard0.GetBalanceByPrivatekey("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh")
+        var txResult = await shard0.GetBalanceByPrivatekey(ConstantValue.Shard0_1Prk)
         console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
         acc1Balance = txResult.Response.Result
-        var txResult = await shard1.GetBalanceByPrivatekey("112t8roj4ZNc3mjUiAGoCwsrueBRiwYqE1URbUrJpBReRDZ5CDubBDUZtfN3Hxht3KtCFVNie1vsdWTPpTe3ydKHnnCvface41feiEahxJgd")
+        var txResult = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
         console.log("SHARD 1: Account Balance Result", txResult.Response.Result);
         acc2Balance = txResult.Response.Result
-        const blockResult = await shard1.GetBlockCount(1)
-        const currentBlockHeight = blockResult.Response.Result
-        const sendTxResult = await shard0.CreateAndSendTransaction("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh", {
-            "1Uv25dvj8HnfGNYAcY9c1wg5uJ2XoZe3MCUv3MBrbTS15tykLL1i3r1ko7VLv5zhB9acCs5JS7U4X9tKexbneumEje6o9rHZqVeihxZW7": 1000
+        const FeeResult1 = await shard0.EstimateFee(ConstantValue.Shard0_1Prk, {
+            "1Uv25dvj8HnfGNYAcY9c1wg5uJ2XoZe3MCUv3MBrbTS15tykLL1i3r1ko7VLv5zhB9acCs5JS7U4X9tKexbneumEje6o9rHZqVeihxZW7": transferAmount
         }, 0, 0)
+        const sendTxResult = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_1Prk, {
+            // ContantValue.Shard1_0PA
+            "1Uv25dvj8HnfGNYAcY9c1wg5uJ2XoZe3MCUv3MBrbTS15tykLL1i3r1ko7VLv5zhB9acCs5JS7U4X9tKexbneumEje6o9rHZqVeihxZW7": transferAmount
+        }, fee, 0)
         console.log("Transaction Shard 0", sendTxResult.Response.Result.TxID)
-        const waitForResultTx = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    console.log('call result')
-                    tx = await shard0.GetTransactionByHash(sendTxResult.Response.Result.TxID)
-                    if (tx.Response.Result != null) {
-                        resolve(tx.Response.Result)
-                    } else {
-                        setTimeout(() => {
-                            console.log('re-call after 10s')
-                            getResult()
-                        }, 10000)
-                    }
-                }
-                getResult()
-            })
-        }
+       
+        const blockResultShard1 = await shard1.GetBlockCount(1)
+        const currentBlockHeightShard1 = blockResultShard1.Response.Result
+        
+        await Util.WaitForResultTx(shard0,waitTime,sendTxResult.Response.Result.TxID)
+        await Util.WaitForCrossShardBlockTransferContantNormal(shard1,waitTime, 1, currentBlockHeightShard1,ConstantValue.shard1_0PB, transferAmount)
 
-        const resultTx = await waitForResultTx()
-        console.log(resultTx)
-
-        const waitForResultBlock = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    console.log('call result')
-                    const blockResult = await shard1.GetBlockCount(1)
-                    if (blockResult.Response.Result != null && blockResult.Response.Result > currentBlockHeight + waitblock){
-                        resolve(blockResult.Response.Result)
-                    } else {
-                        setTimeout(() => {
-                            console.log('re-call after 10s')
-                            getResult()
-                        }, 10000)
-                    }
-                }
-                getResult()
-            })
-        }
-
-        const resultBlock = await waitForResultBlock()
-        console.log(resultBlock)
-
-        var txResult = await shard0.GetBalanceByPrivatekey("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh")
+        var txResult = await shard0.GetBalanceByPrivatekey(ConstantValue.Shard0_1Prk)
         console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
         acc1BalanceNew = txResult.Response.Result
-        var txResult = await shard1.GetBalanceByPrivatekey("112t8roj4ZNc3mjUiAGoCwsrueBRiwYqE1URbUrJpBReRDZ5CDubBDUZtfN3Hxht3KtCFVNie1vsdWTPpTe3ydKHnnCvface41feiEahxJgd")
+        var txResult = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
         console.log("SHARD 1: Account Balance Result", txResult.Response.Result);
         acc2BalanceNew = txResult.Response.Result
 
-        assert.equal(acc1BalanceNew, acc1Balance - 1000)
+        console.log("Fee for Transaction: ", FeeResult1.Response.Result.EstimateTxSizeInKb)
+        assert.equal(acc1BalanceNew, acc1Balance - 1000 - fee * (FeeResult1.Response.Result.EstimateTxSizeInKb))
         assert.equal(acc2BalanceNew, acc2Balance + 1000)
     })
     it("Should Be Able To Transfer Constant BACK From SHARD 1 to SHARD 0", async function () {
-        var txResult = await shard0.GetBalanceByPrivatekey("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh")
+        var txResult = await shard0.GetBalanceByPrivatekey(ConstantValue.Shard0_1Prk)
         console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
         acc1Balance = txResult.Response.Result
-        var txResult = await shard1.GetBalanceByPrivatekey("112t8roj4ZNc3mjUiAGoCwsrueBRiwYqE1URbUrJpBReRDZ5CDubBDUZtfN3Hxht3KtCFVNie1vsdWTPpTe3ydKHnnCvface41feiEahxJgd")
+        var txResult = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
         console.log("SHARD 1: Account Balance Result", txResult.Response.Result);
         acc2Balance = txResult.Response.Result
 
-        const blockResult = await shard0.GetBlockCount(0)
-        const currentBlockHeight = blockResult.Response.Result
-
-        const sendTxResult = await shard1.CreateAndSendTransaction("112t8roj4ZNc3mjUiAGoCwsrueBRiwYqE1URbUrJpBReRDZ5CDubBDUZtfN3Hxht3KtCFVNie1vsdWTPpTe3ydKHnnCvface41feiEahxJgd", {
-            "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": 500
+        const FeeResult2 = await shard1.EstimateFee(ConstantValue.Shard1_0Prk, {
+            "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": transferAmount2
         }, 0, 0)
-        console.log("Transaction Shard 0", sendTxResult.Response.Result.TxID)
+        const sendTxResult = await shard1.CreateAndSendTransaction(ConstantValue.Shard1_0Prk, {
+            "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": transferAmount2
+        }, fee, 0)
+        console.log("Transaction Shard 1", sendTxResult.Response.Result.TxID)
+        const blockResultShard0 = await shard0.GetBlockCount(0)
+        const currentBlockHeightShard0 = blockResultShard0.Response.Result
+        
+        await Util.WaitForResultTx(shard1, waitTime, sendTxResult.Response.Result.TxID)
 
-        const waitForResultTx = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    console.log('call result')
-                    tx = await shard1.GetTransactionByHash(sendTxResult.Response.Result.TxID)
-                    if (tx.Response.Result != null) {
-                        resolve(tx.Response.Result)
-                    } else {
-                        setTimeout(() => {
-                            console.log('re-call after 10s')
-                            getResult()
-                        }, 10000)
-                    }
-                }
-                getResult()
-            })
-        }
+        await Util.WaitForCrossShardBlockTransferContantNormal(shard0, waitTime, 0, currentBlockHeightShard0, ConstantValue.shard0_1PB, transferAmount2)
 
-        const resultTx = await waitForResultTx()
-        console.log(resultTx)
-
-        const waitForResultBlock = async () => {
-            return new Promise((resolve) => {
-                var getResult = async () => {
-                    console.log('call result')
-                    const blockResult = await shard0.GetBlockCount(0)
-                    if (blockResult.Response.Result != null && blockResult.Response.Result > currentBlockHeight + waitblock){
-                        resolve(blockResult.Response.Result)
-                    } else {
-                        setTimeout(() => {
-                            console.log('re-call after 3s')
-                            getResult()
-                        }, 3000)
-                    }
-                }
-                getResult()
-            })
-        }
-
-        const resultBlock = await waitForResultBlock()
-        console.log(resultBlock)
-
-        var txResult = await shard0.GetBalanceByPrivatekey("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh")
+        var txResult = await shard0.GetBalanceByPrivatekey(ConstantValue.Shard0_1Prk)
         console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
         acc1BalanceNew = txResult.Response.Result
-        var txResult = await shard1.GetBalanceByPrivatekey("112t8roj4ZNc3mjUiAGoCwsrueBRiwYqE1URbUrJpBReRDZ5CDubBDUZtfN3Hxht3KtCFVNie1vsdWTPpTe3ydKHnnCvface41feiEahxJgd")
+        var txResult = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
         console.log("SHARD 1: Account Balance Result", txResult.Response.Result);
         acc2BalanceNew = txResult.Response.Result
 
+        console.log("Fee for Transaction: ", FeeResult2.Response.Result.EstimateTxSizeInKb)
+        assert.equal(acc1BalanceNew, acc1Balance + transferAmount2)
+        assert.equal(acc2BalanceNew, acc2Balance - transferAmount2 - fee * (FeeResult2.Response.Result.EstimateTxSizeInKb))
+    })
+    it("Should Be Able To Transfer Constant From SHARD 0 to SHARD 1 With Privacy Flag", async function () {
+        var txResult = await shard0.GetBalanceByPrivatekey(ConstantValue.Shard0_1Prk)
+        console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
+        acc1Balance = txResult.Response.Result
+        var txResult = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
+        console.log("SHARD 1: Account Balance Result", txResult.Response.Result);
+        acc2Balance = txResult.Response.Result
+        const FeeResult1 = await shard0.EstimateFee(ConstantValue.Shard0_1Prk, {
+            "1Uv25dvj8HnfGNYAcY9c1wg5uJ2XoZe3MCUv3MBrbTS15tykLL1i3r1ko7VLv5zhB9acCs5JS7U4X9tKexbneumEje6o9rHZqVeihxZW7": transferAmount
+        }, 0, 1)
+        const sendTxResult = await shard0.CreateAndSendTransaction(ConstantValue.Shard0_1Prk, {
+            // ContantValue.Shard1_0PA
+            "1Uv25dvj8HnfGNYAcY9c1wg5uJ2XoZe3MCUv3MBrbTS15tykLL1i3r1ko7VLv5zhB9acCs5JS7U4X9tKexbneumEje6o9rHZqVeihxZW7": transferAmount
+        }, fee, 1)
+        console.log("Transaction Shard 0", sendTxResult.Response.Result.TxID)
+       
+        const blockResultShard1 = await shard1.GetBlockCount(1)
+        const currentBlockHeightShard1 = blockResultShard1.Response.Result
+        
+        await Util.WaitForResultTx(shard0,waitTime,sendTxResult.Response.Result.TxID)
+
+        await Util.WaitForCrossShardBlockTransferContantPrivacy(shard1,waitTime, 1, currentBlockHeightShard1,ConstantValue.shard1_0PB, transferAmount)
+
+        var txResult = await shard0.GetBalanceByPrivatekey(ConstantValue.Shard0_1Prk)
+        console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
+        acc1BalanceNew = txResult.Response.Result
+        var txResult = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
+        console.log("SHARD 1: Account Balance Result", txResult.Response.Result);
+        acc2BalanceNew = txResult.Response.Result
+
+        console.log("Fee for Transaction: ", FeeResult1.Response.Result.EstimateTxSizeInKb)
+        assert.ok(acc1BalanceNew >= acc1Balance - 1000 - fee * (FeeResult1.Response.Result.EstimateTxSizeInKb))
+        assert.equal(acc2BalanceNew, acc2Balance + 1000)
+    })
+    it("Should Be Able To Transfer Constant BACK From SHARD 1 to SHARD 0 With Privacy Flag", async function () {
+        var txResult = await shard0.GetBalanceByPrivatekey(ConstantValue.Shard0_1Prk)
+        console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
+        acc1Balance = txResult.Response.Result
+        var txResult = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
+        console.log("SHARD 1: Account Balance Result", txResult.Response.Result);
+        acc2Balance = txResult.Response.Result
+
+        const FeeResult2 = await shard1.EstimateFee(ConstantValue.Shard1_0Prk, {
+            "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": transferAmount2
+        }, 0, 1)
+        const sendTxResult = await shard1.CreateAndSendTransaction(ConstantValue.Shard1_0Prk, {
+            "1Uv4BiijnksfTmfisTkgdx8762MFunrad2RZvpd3vPnWHYqQbiPthM7psaMzVi35Fmj8z6vtqPYs9avjJF6Zbsq7gdZ2nJBwkRgnT7bFJ": transferAmount2
+        }, fee, 1)
+        console.log("Transaction Shard 1", sendTxResult.Response.Result.TxID)
+
+        const blockResultShard0 = await shard0.GetBlockCount(0)
+        const currentBlockHeightShard0 = blockResultShard0.Response.Result
+        
+        await Util.WaitForResultTx(shard1, waitTime, sendTxResult.Response.Result.TxID)
+
+        await Util.WaitForCrossShardBlockTransferContantPrivacy(shard0, waitTime, 0,currentBlockHeightShard0, ConstantValue.shard0_1PB, transferAmount2)
+
+        var txResult = await shard0.GetBalanceByPrivatekey(ConstantValue.Shard0_1Prk)
+        console.log("SHARD 0: Account Balance Result", txResult.Response.Result);
+        acc1BalanceNew = txResult.Response.Result
+        var txResult = await shard1.GetBalanceByPrivatekey(ConstantValue.Shard1_0Prk)
+        console.log("SHARD 1: Account Balance Result", txResult.Response.Result);
+        acc2BalanceNew = txResult.Response.Result
+
+        console.log("Fee for Transaction: ", FeeResult2.Response.Result.EstimateTxSizeInKb)
         assert.equal(acc1BalanceNew, acc1Balance + 500)
-        assert.equal(acc2BalanceNew, acc2Balance - 500)
+        assert.ok(acc2BalanceNew >= acc2Balance - 500 - fee * (FeeResult2.Response.Result.EstimateTxSizeInKb), "Balance Should equal or greater than:`${acc2Balance - 500 - fee * (FeeResult2.Response.Result.EstimateTxSizeInKb}`")
     })
 })

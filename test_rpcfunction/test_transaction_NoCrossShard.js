@@ -5,11 +5,19 @@ const ConstantValue = require('../common/constant');
   const shard0 = new ConstantRPC("127.0.0.1", 9334);
   const shard1 = new ConstantRPC("127.0.0.1", 9338);
   // Shard 0 
-  for (i = 0; i < 4; i++) {
-    const sendTxResult = await shard0.CreateAndSendTransaction("112t8rqnMrtPkJ4YWzXfG82pd9vCe2jvWGxqwniPM5y4hnimki6LcVNfXxN911ViJS8arTozjH4rTpfaGo5i1KKcG1ayjiMsa4E3nABGAqQh", {
-      "1Uv3VB24eUszt5xqVfB87ninDu7H43gGxdjAUxs9j9JzisBJcJr7bAJpAhxBNvqe8KNjM5G9ieS1iC944YhPWKs3H2US2qSqTyyDNS4Ba": 2
+  for (i = 0; i < 1; i++) {
+    var start = new Date()
+    const sendTxResult = await shard0.CreateAndSendTransaction("112t8rqGc71CqjrDCuReGkphJ4uWHJmiaV7rVczqNhc33pzChmJRvikZNc3Dt5V7quhdzjWW9Z4BrB2BxdK5VtHzsG9JZdZ5M7yYYGidKKZV", {
+      "1Uv3VB24eUszt5xqVfB87ninDu7H43gGxdjAUxs9j9JzisBJcJr7bAJpAhxBNvqe8KNjM5G9ieS1iC944YhPWKs3H2US2qSqTyyDNS4Ba": 5000
     }, 100, 0)
+    if (sendTxResult.Response.Error){
+      console.log("Transaction Shard 0", sendTxResult.Response.Error)
+      var end = new Date() - start
+      console.info('Execution time: %dms', end)
+    }
     console.log("Transaction Shard 0", sendTxResult.Response.Result.TxID)
+    var end = new Date() - start
+    console.info('Execution time: %dms', end)
   }
   //Shard 1
   // for (i = 0; i < 5; i++) {
